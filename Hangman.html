@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        #message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e0f7fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #hangman-game {
+            margin-top: 20px;
+        }
+
+        #guessed-letters {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #tries-left {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        #guess-input {
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #guess-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #guess-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Win or Hangaman</h1>
+        <p>Guess the word...</p>
+
+        <div id="message"></div>
+        
+        <div id="hangman-game">
+            <p>Current word: <span id="guessed-letters"></span></p>
+            <p>Tries left: <span id="tries-left"></span></p>
+            <p>Enter a letter: <input type="text" id="guess-input"></p>
+            <button id="guess-button">Guess</button>
+        </div>
+    </div>
+
+    <script>
+        // java code
+		
+        const words = ["Bologna", "Incomprehensibility", "Conscientious", "Onomatopoeia", "Trichotillomania"];
+        const maxTries = 6;
+        let tries = 0;
+
+        const wordToGuess = words[Math.floor(Math.random() * words.length)];
+        let guessedLetters = "_".repeat(wordToGuess.length);
+
+        const guessedLettersSpan = document.getElementById("guessed-letters");
+        const triesLeftSpan = document.getElementById("tries-left");
+        const messageDiv = document.getElementById("message");
+
+        guessedLettersSpan.textContent = guessedLetters;
+        triesLeftSpan.textContent = maxTries - tries;
+
+        document.getElementById("guess-button").addEventListener("click", () => {
+            const guessInput = document.getElementById("guess-input");
+            const guess = guessInput.value.toLowerCase();
+            
+            if (guess.length !== 1) {
+                alert("Please enter a single letter.");
+                return;
+            }
+
+            if (!wordToGuess.toLowerCase().includes(guess)) {
+                tries++;
+            }
+
+            guessedLetters = wordToGuess.split("").map(letter => guessedLetters[wordToGuess.indexOf(letter)] === "_" && letter.toLowerCase() === guess ? letter : guessedLetters[wordToGuess.indexOf(letter)]).join("");
+            
+            guessedLettersSpan.textContent = guessedLetters;
+            triesLeftSpan.textContent = maxTries - tries;
+
+            guessInput.value = "";
+
+            if (!guessedLetters.includes("_")) {
+                messageDiv.textContent = "Congratulations! You guessed the word: " + wordToGuess;
+            } else if (tries >= maxTries) {
+                messageDiv.textContent = "Sorry, you failed. The word was: " + wordToGuess;
+            }
+        });
+    </script>
+</body>
+</html>
+
